@@ -1,7 +1,7 @@
 module Vibrational
 
 using Unitful
-import PhysicalConstants.CODATA2018: R, k_B, N_A, h
+import PhysicalConstants.CODATA2018: R, k_B, N_A, h, c_0
 
 @doc raw"""
     Vibrational.calcΘvib(ν̃)::typeof(0.0u"K")
@@ -196,7 +196,7 @@ function Sm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
     T = T |> u"K"
     map(ν̃s) do ν̃
         Θ_vib = calcΘvib(ν̃)
-        R * Θ_vib / T / (exp(Θ_vib / T) - 1) - log(1 - exp(-Θ_vib / T))
+        R * (Θ_vib / T / (exp(Θ_vib / T) - 1) - log(1 - exp(-Θ_vib / T)))
     end |> sum
 end
 

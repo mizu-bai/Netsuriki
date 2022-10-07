@@ -3,7 +3,7 @@ module Rotational
 using Molecules
 using Molecules.Symmetry
 using Unitful
-import PhysicalConstants.CODATA2018: R, k_B, N_A, h
+import PhysicalConstants.CODATA2018: R, k_B, N_A, h, m_u
 
 @doc raw"""
     Rotational.calcΘrot(I::typeof(1.0u"kg*m^2"))::typeof(1.0u"K")
