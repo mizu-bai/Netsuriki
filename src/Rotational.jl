@@ -64,7 +64,7 @@ end
 
 
 @doc raw"""
-    Rotational.q(mol::Molecule, T::Unitful.Temperature=298.15u"K")::Float64
+    Rotational.q(mol::Molecule; T::Unitful.Temperature=298.15u"K")::Float64
 
 Compute **Rotational Partition Function**
 
@@ -93,7 +93,7 @@ q_{rot} = \frac{\pi^\frac{1}{2} T^{\frac{3}{2}}}{\sigma_{rot}(\Theta_a \Theta_b 
 - `mol::Molecule`: A `Molecule` object
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function q(mol::Molecule, T::Unitful.Temperature=298.15u"K")::Float64
+function q(mol::Molecule; T::Unitful.Temperature=298.15u"K")::Float64
     T = T |> u"K"
     # if Atom
     if length(mol.atoms) == 1
@@ -118,7 +118,7 @@ end
 
 
 @doc raw"""
-    Rotational.Am(q_rot::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Rotational.Am(q_rot::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute **Rotational Molar Helmholtz Free Energy**.
 
@@ -133,14 +133,14 @@ A_{m, rot} = - N_A k_B T \ln q_{rot} = - R T \ln q_{rot}
 - `q::Float64`: **Rotational Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Am(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Am(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     -R * T * log(q)
 end
 
 
 @doc raw"""
-    Rotational.Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Rotational.Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute **Rotational Molar Gibbs Free Energy**.
 
@@ -155,7 +155,7 @@ G_{m, rot} = - N_A k_B T \ln q_{rot} = - R T \ln q_{rot}
 - `q::Float64`: **Rotational Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     -R * T * log(q)
 end

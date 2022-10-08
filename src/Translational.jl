@@ -6,7 +6,7 @@ import PhysicalConstants.CODATA2018: R, k_B, N_A, h
 
 
 @doc raw"""
-    Translational.q(mol::Molecule, T::Unitful.Temperature=298.15u"K", p::Unitful.Pressure=1u"atm")::Float64
+    Translational.q(mol::Molecule; T::Unitful.Temperature=298.15u"K", p::Unitful.Pressure=1u"atm")::Float64
 
 Compute **Translational Partition Function**.
 
@@ -26,7 +26,7 @@ under temperature ``T`` and pressure ``p``.
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 - `p::Unitful.Pressure`: Pressure, with default value of `1u"atm"`
 """
-function q(mol::Molecule, T::Unitful.Temperature=298.15u"K", p::Unitful.Pressure=1u"atm")::Float64
+function q(mol::Molecule; T::Unitful.Temperature=298.15u"K", p::Unitful.Pressure=1u"atm")::Float64
     T = T |> u"K"
     p = p |> u"Pa"
     m = [atom.mass for atom in mol.atoms] |> sum |> m -> m * (1u"g/mol" |> u"kg/mol") / N_A
@@ -36,7 +36,7 @@ end
 
 
 @doc raw"""
-    Translational.Am(q_tr::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Translational.Am(q_tr::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute **Translational Molar Helmholtz Free Energy**.
 
@@ -55,14 +55,14 @@ A_{m, tr} = & -k_B T \ln \frac{{(q_{tr})}^{N_A}}{N!} \\
 - `q::Float64`: **Translational Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Am(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Am(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     -R * T * (log(q) - log(N_A |> ustrip) + 1)
 end
 
 
 @doc raw"""
-    Translational.Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Translational.Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute **Translational Molar Gibbs Free Energy**.
 
@@ -77,7 +77,7 @@ G_{m, tr} = A_{m, tr} + pV = A_{m, tr} + RT
 - `q::Float64`: **Translational Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     Am(q) + R * T
 end

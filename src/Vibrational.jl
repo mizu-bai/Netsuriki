@@ -33,7 +33,7 @@ end
 
 
 @doc raw"""
-    Vibrational.q(ν̃s, T::Unitful.Temperature=298.15u"K";)::Float64
+    Vibrational.q(ν̃s; T::Unitful.Temperature=298.15u"K";)::Float64
 
 Compute **Vibrational Partition Function**.
 
@@ -69,7 +69,7 @@ q_{vib} = \Pi q_{vib, i}
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
 
-function q(ν̃s, T::Unitful.Temperature=298.15u"K";)::Float64
+function q(ν̃s; T::Unitful.Temperature=298.15u"K")::Float64
     @assert unit(ν̃s[1]) == unit(1.0u"1/cm") "list of ν̃ should in the unit of 1/cm!"
     T = T |> u"K"
     map(ν̃s) do ν̃
@@ -80,7 +80,7 @@ end
 
 
 @doc raw"""
-    Vibrational.Am(q_rot::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Vibrational.Am(q_rot::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute **Vibrational Molar Helmholtz Free Energy**.
 
@@ -95,14 +95,14 @@ A_{m, rot} = - N_A k_B T \ln q_{vib} = - R T \ln q_{vib}
 - `q::Float64`: **Rotational Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Am(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Am(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     -R * T * log(q)
 end
 
 
 @doc raw"""
-    Vibrational.Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Vibrational.Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute **Vibrational Molar Gibbs Free Energy**.
 
@@ -117,9 +117,9 @@ G_{m, vib} = - N_A k_B T \ln q_{vib} = - R T \ln q_{vib}
 - `q::Float64`: **Rotational Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
-    -R * T * log(q)
+    Am(q, T=T)
 end
 
 
@@ -139,12 +139,12 @@ U_{m, vib} = R \sum \frac{\Theta_{vib, i}}{\exp \left[\frac{\Theta_{vib, i}}{T}\
 - `ν̃s`: Vector of wavenumbers, all elements must in the unit of `u"1/cm"`
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Um(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Um(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     @assert unit(ν̃s[1]) == unit(1.0u"1/cm") "list of ν̃ should in the unit of 1/cm!"
     T = T |> u"K"
     map(ν̃s) do ν̃
         Θ_vib = calcΘvib(ν̃)
-        R * Θ_vib / (1/2 + 1 / (exp(Θ_vib / T - 1)))
+        R * Θ_vib * (1/2 + 1 / (exp(Θ_vib / T) - 1))
     end |> sum
 end
 
@@ -165,13 +165,10 @@ H_{m, vib} = R \sum \frac{\Theta_{vib, i}}{\exp \left[\frac{\Theta_{vib, i}}{T}\
 - `ν̃s`: Vector of wavenumbers, all elements must in the unit of `u"1/cm"`
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Hm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Hm(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     @assert unit(ν̃s[1]) == unit(1.0u"1/cm") "list of ν̃ should in the unit of 1/cm!"
     T = T |> u"K"
-    map(ν̃s) do ν̃
-        Θ_vib = calcΘvib(ν̃)
-        R * Θ_vib / (1/2 + 1 / (exp(Θ_vib / T - 1)))
-    end |> sum
+    Um(ν̃s, T=T)
 end
 
 
@@ -191,7 +188,7 @@ S_{m, vib} = R \sum \left\{ - \ln \left[ 1 - \exp [- \frac{\Theta_{vib, i}}{T}] 
 - `ν̃s`: Vector of wavenumbers, all elements must in the unit of `u"1/cm"`
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Sm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
+function Sm(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
     @assert unit(ν̃s[1]) == unit(1.0u"1/cm") "list of ν̃ should in the unit of 1/cm!" 
     T = T |> u"K"
     map(ν̃s) do ν̃
@@ -202,7 +199,7 @@ end
 
 
 @doc raw"""
-    Vibrational.CVm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
+    Vibrational.CVm(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
 
 Compute **Vibrational Molar Volume Heat Capacity**.
 
@@ -217,7 +214,7 @@ C_{Vm, vib} = R \sum \frac{{(\frac{\Theta_{vib, i}}{T})}^2 \exp [ \frac{\Theta_{
 - `ν̃s`: Vector of wavenumbers, all elements must in the unit of `u"1/cm"`
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function CVm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
+function CVm(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
     @assert unit(ν̃s[1]) == unit(1.0u"1/cm") "list of ν̃ should in the unit of 1/cm!"
     T = T |> u"K"
     map(ν̃s) do ν̃
@@ -228,7 +225,7 @@ end
 
 
 @doc raw"""
-    Vibrational.Cpm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
+    Vibrational.Cpm(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
 
 Compute **Vibrational Molar Pressure Heat Capacity**.
 
@@ -243,13 +240,10 @@ C_{pm, vib} = R \sum \frac{{(\frac{\Theta_{vib, i}}{T})}^2 \exp [ \frac{\Theta_{
 - `ν̃s`: Vector of wavenumbers, all elements must in the unit of `u"1/cm"`
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Cpm(ν̃s, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
+function Cpm(ν̃s; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol/K")
     @assert unit(ν̃s[1]) == unit(1.0u"1/cm") "list of ν̃ should in the unit of 1/cm!"
     T = T |> u"K"
-    map(ν̃s) do ν̃
-        Θ_vib = calcΘvib(ν̃)
-        R  * (Θ_vib / T)^2 * exp(Θ_vib / T) / (exp(Θ_vib / T) - 1)^2
-    end |> sum
+    CVm(ν̃s, T=T)
 end
 
 end

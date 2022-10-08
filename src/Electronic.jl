@@ -28,7 +28,7 @@ end
 
 
 @doc raw"""
-    Electronic.Am(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Electronic.Am(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute Electronic Helmholtz Free Energy.
 
@@ -45,14 +45,14 @@ where ``R`` is **Molar Gas Constant**, ``T`` is temperature, and ``q_{el}`` is *
 - `q::Float64`: **Electronic Partition Function**
 - `T::Unitful.Temperature`: Temperature, with default value of `298.15u"K"`
 """
-function Am(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Am(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     -R * T * log(q)
 end
 
 
 @doc raw"""
-    Electronic.Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+    Electronic.Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
 
 Compute Electronic **Gibbs Free Energy**.
 
@@ -69,7 +69,7 @@ where ``R`` is **Molar Gas Constant**, ``T`` is temperature, and ``q_{el}`` is *
 - `q::Float64`: **Electronic Partition Function**
 - `T::Unitful.Temperature`: Temperature, `298.15u"K"` by default
 """
-function Gm(q::Float64, T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
+function Gm(q::Float64; T::Unitful.Temperature=298.15u"K")::typeof(1.0u"J/mol")
     T = T |> u"K"
     -R * T * log(q)
 end
