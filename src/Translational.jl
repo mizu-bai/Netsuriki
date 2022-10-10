@@ -90,7 +90,7 @@ Compute **Translational Molar Internal Thermal Energy**.
 # Detail
 
 ```math
-G_{m, tr} = \frac{3}{2} N k_B T = \frac{3}{2} R T
+U_{m, tr} = \frac{3}{2} N k_B T = \frac{3}{2} R T
 ```
 
 # Arguments

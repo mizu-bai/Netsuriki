@@ -78,7 +78,7 @@ end
 @doc raw"""
     Electronic.Um()::typeof(1.0u"J/mol")
 
-Compute **Electronic Molar Internal Thermal**.
+Compute **Electronic Molar Internal Thermal Energy**.
 
 # Detail
 

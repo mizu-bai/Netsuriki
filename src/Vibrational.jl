@@ -60,7 +60,7 @@ q_{vib, i} = \frac{1}{1 - \exp [\frac{- \Theta_{vib, i}}{T}]}
 Overall Vibrational Partition Function
 
 ```math
-q_{vib} = \Pi q_{vib, i}
+q_{vib} = \prod q_{vib, i}
 ```
 
 # Arguments

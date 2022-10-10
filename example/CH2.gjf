@@ -1,0 +1,14 @@
+%nproc=4
+%mem=4GB
+%chk=CH2.chk
+#p b3lyp em=gd3bj def2tzvp opt freq
+
+Title Card Required
+
+0 3
+ C                  0.00000000    0.00000000    0.13375000
+ H                  0.00000000    0.92664718   -0.40125000
+ H                  0.00000000   -0.92664718   -0.40125000
+
+
+
