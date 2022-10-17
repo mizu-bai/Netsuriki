@@ -21,3 +21,7 @@ Here is an example about computing thermochemistry data of CH<sub>2</sub> (methy
 ## License
 
 The `Netsuriki.jl` package is licensed under the BSD-2-Clause License. The original author is [mizu-bai](https://github.com/mizu-bai).
+
+## Meaning of Netsuriki
+
+熱力学（ねつりきがく） means thermodynamics in Japanese, so I named this package `Netsuriki.jl`, which is the pronunciation of 熱力（ねつりき）.
